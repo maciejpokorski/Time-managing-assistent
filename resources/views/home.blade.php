@@ -14,7 +14,7 @@
                         </div>
                     @endif
 
-                    You are logged in!
+                    <div><a href="/events"><i class="fa fa-4x fa-calendar" aria-hidden="true"></i> Check your events</a></div>
                 </div>
             </div>
         </div>

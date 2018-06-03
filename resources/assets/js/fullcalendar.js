@@ -1,0 +1,1 @@
+window.fullcalendar = require('fullcalendar');
