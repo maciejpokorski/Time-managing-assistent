@@ -87,7 +87,7 @@ class EventController extends Controller
         $event->start_date = $start_date->toDateString();
         $event->end_date = $end_date->toDateString();
 
-        return view('event', compact(['events', 'categoriesArray']));
+        return view('event', compact(['event', 'categoriesArray']));
     }
 
      /**
