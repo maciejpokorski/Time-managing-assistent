@@ -21,26 +21,31 @@ class EventController extends Controller
     public function index()
     {
         $events = [];
-        $data = Event::all();
-        if($data->count()) {
-            foreach ($data as $key => $value) {
-                $events[] = Calendar::event(
-                    $value->title,
-                    false,
-                    new \DateTime($value->start_date),
-                    new \DateTime($value->end_date.'+ 1 day'),
-                    null,
-                    // Add color and link on event
-	                [
-	                    'color' => '#f05050',
-                        'url' => 'events/'.$value->id
-	                ]
-                );
+        $categories = Auth::user()->categories()->with('events')->get();
+        $categoriesArray = [];
+        if($categories->count()) {
+            foreach ($categories as $category) {
+                $categoriesArray[$category->id] = $category->title;
+                foreach ($category->events as $event){
+                    $events[] = Calendar::event(
+                        $event->title,
+                        false,
+                        new \DateTime($event->start_date),
+                        new \DateTime($event->end_date.'+ 1 day'),
+                        null,
+                        // Add color and link on event
+                        [
+                            'color' => $category->color,
+                            'url' => 'events/'.$event->id
+                        ]
+                    );
+                }
+                
             }
         }
 
         $calendar = Calendar::addEvents($events);
-        return view('fullcalender', compact('calendar'));
+        return view('fullcalender', compact(['calendar', 'categoriesArray']));
     }
 
     public function store(Request $request)
@@ -72,7 +77,9 @@ class EventController extends Controller
 
     public function show($id){
         $event = Event::findOrFail($id);
-
+        $categoriesArray =  Auth::user()->categories()->get()->mapWithKeys(function ($item) {
+            return [$item['id'] => $item['title']];
+        });
         $start_date = Carbon::parse($event->start_date);
         $end_date = Carbon::parse($event->end_date);
         $event->start_time = $start_date->format('H:i');
@@ -80,7 +87,7 @@ class EventController extends Controller
         $event->start_date = $start_date->toDateString();
         $event->end_date = $end_date->toDateString();
 
-        return view('event', ['event' => $event]);
+        return view('event', compact(['events', 'categoriesArray']));
     }
 
      /**

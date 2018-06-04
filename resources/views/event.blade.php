@@ -53,6 +53,15 @@
           </div>
         </div>
 
+        <div class="col-xs-2 col-sm-2 col-md-2">
+          <div class="form-group">
+            {!! Form::label('categor_id','Category:') !!}
+            <div>
+              {!! Form::select('category_id', $categoriesArray, $event->category_id) !!}
+            </div>
+          </div>
+        </div>
+
         <div class="col-xs-3 col-sm-3 col-md-3">
           <div class="form-group">
             {!! Form::label('end_time','End Time:') !!}
