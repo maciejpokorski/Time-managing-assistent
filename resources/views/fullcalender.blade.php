@@ -74,6 +74,8 @@
                     </div>
                   </div>
 
+                  
+
                   <div class="col-xs-2 col-sm-2 col-md-2 offset-md-4 text-center add-event-submit-wrapper">
                     {!! Form::submit('Add Event',['class'=>'btn btn-primary']) !!}
                   </div>

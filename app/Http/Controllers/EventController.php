@@ -13,10 +13,6 @@ use Illuminate\Support\Facades\Input;
 
 class EventController extends Controller
 {
-    private $calendarOptions = [
-        'displayEventTime' => true,
-        'timeFormat' => 'H(:mm)'
-    ];
 
     public function __construct(){
         $this->middleware('auth');
@@ -32,19 +28,18 @@ class EventController extends Controller
                     $value->title,
                     false,
                     new \DateTime($value->start_date),
-                    new \DateTime($value->finish_date.'+ 1 day'),
+                    new \DateTime($value->end_date.'+ 1 day'),
                     null,
                     // Add color and link on event
 	                [
 	                    'color' => '#f05050',
-                        'url' => 'events/'.$value->id,
-                        'timeFormat' => 'H(:mm)',
-                        'displayEventTime' => true
+                        'url' => 'events/'.$value->id
 	                ]
                 );
             }
         }
-        $calendar = Calendar::addEvents($events)->setOptions($this->calendarOptions);
+
+        $calendar = Calendar::addEvents($events);
         return view('fullcalender', compact('calendar'));
     }
 
@@ -128,6 +123,12 @@ class EventController extends Controller
      */
     public function destroy($id)
     {
-        return 1;
+        // delete
+        $event = Event::findOrFail($id);
+        $event->delete();
+
+        // redirect
+        \Session::flash('success', 'Event successfully deleted');
+        return Redirect::to('/events');
     }
 }
