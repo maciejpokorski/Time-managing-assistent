@@ -37,7 +37,8 @@
                                 </tr>
                                 <tr>
                                     <th> Color </th>
-                                    <td> {{ $category->color }} </td>
+                                    <td>
+                                        <input name="color" disabled readonly type="color" value="{{ $category->color or ''}}"> {{ $category->color }} </td>
                                 </tr>
                             </tbody>
                         </table>

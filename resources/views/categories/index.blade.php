@@ -38,7 +38,8 @@
                                 <tr>
                                     <td>{{ $loop->iteration or $item->id }}</td>
                                     <td>{{ $item->title }}</td>
-                                    <td>{{ $item->color }}</td>
+                                    <td>
+                                        <input name="color" disabled readonly type="color" value="{{ $item->color or ''}}"> {{ $item->color }}</td>
                                     <td>
                                         <a href="{{ url('/categories/' . $item->id) }}" title="View Category">
                                             <button class="btn btn-info btn-sm">
