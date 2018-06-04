@@ -3,8 +3,6 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script> @endsection @section('content')
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col-md-4">
-    </div>
     <div class="col-md-8">
       <div class="card">
         <div class="card-header">Events</div>
