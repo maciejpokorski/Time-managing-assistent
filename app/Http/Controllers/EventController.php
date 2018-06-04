@@ -68,7 +68,7 @@ class EventController extends Controller
         $event->title = $request['event_name'];
         $event->start_date = $request['start_date'];
         $event->end_date = $request['end_date'];
-        $event->user_id = Auth::id();
+        $event->category_id = $request['category_id'];
         $event->save();
 
         \Session::flash('success','Event added successfully.');
