@@ -152,6 +152,7 @@ return [
          */
         MaddHatter\LaravelFullcalendar\ServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
+        'Khill\Lavacharts\Laravel\LavachartsServiceProvider',
         /*
          * Application Service Providers...
          */
@@ -212,6 +213,7 @@ return [
         'Calendar' => MaddHatter\LaravelFullcalendar\Facades\Calendar::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
+        'Lava' => Khill\Lavacharts\Laravel\LavachartsFacade::class,
     ],
 
 ];
