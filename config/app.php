@@ -152,7 +152,7 @@ return [
          */
         MaddHatter\LaravelFullcalendar\ServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
-        'Khill\Lavacharts\Laravel\LavachartsServiceProvider',
+        Khill\Lavacharts\Laravel\LavachartsServiceProvider::class,
         /*
          * Application Service Providers...
          */
