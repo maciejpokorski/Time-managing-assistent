@@ -27,24 +27,44 @@ class StatsController extends Controller
      */
     public function index()
     {
+       $lava = $this->generateChart();
+
+        return view('stats', compact('lava'));
+    }
+
+    private function generateChart(){
         $reasons = \Lava::DataTable();
 
         $reasons->addStringColumn('Reasons')
                 ->addNumberColumn('Percent');
 
-        $categories = Auth::user()->categories()->with('events')->get();
+        $categories = $this->getAuthUserEvents();
 
-        $data = [];
-        foreach($categories as $category){
-            $data[$category->title]['count_hours'] = 0;
-                foreach($category->events as $event){
-                    $data[$category->title]['count_hours'] += $this->countHoursOfEvent($event);
-                }
-            $reasons->addRow([$category->title, $data[$category->title]['count_hours']]);
+        $this->addToChart($categories, $reasons);
+
+        return $this->createPieChart('Time spend on actvities', $reasons);
+    }
+
+    private function getAuthUserEvents(Carbon $filterCreatedAtDate = null, String $filterOperator = null){
+        if($date != null && $filterOperator != null){
+            return Auth::user()->events()->whereDate('start_date', $filterOperator, $filterCreatedAtDate)->get();
         }
+        return Auth::user()->events()->get();
+    }
 
-       $lava = \Lava::PieChart('IMDB', $reasons, [
-            'title'  => 'Time spend on activities',
+    private function addToChart($categories, &$reasons){
+        $categories->groupBy('category.title')->each(function($events, $categoryTitle) use ($reasons){
+            $sum = 0;
+            $events->each(function($event) use (&$sum){
+                $sum += $this->countHoursOfEvent($event);
+            });
+            $reasons->addRow([$categoryTitle, $sum]);
+        });
+    }
+
+    private function createPieChart($title , $reasons){
+        return \Lava::PieChart('chart', $reasons, [
+            'title'  => $title,
             'is3D'   => true,
             'slices' => [
                 ['offset' => 0.2],
@@ -52,7 +72,6 @@ class StatsController extends Controller
                 ['offset' => 0.3]
             ]
         ]);
-        return view('stats', compact('lava'));
     }
 
     private function countHoursOfEvent(Event $event){
