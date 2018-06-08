@@ -44,7 +44,30 @@ class EventController extends Controller
         }
 
         $calendar = Calendar::addEvents($events)
-        ->setOptions(['displayEventEnd' => ['month' => true]])
+        ->setOptions(
+            [
+                'themeSystem' => 'bootstrap4',
+                'bootstrapFontAwesome' => [
+                    'close' => 'fa-times',
+                    'prev' => 'fa-chevron-left',
+                    'next' => 'fa-chevron-right',
+                    'prevYear' => 'fa-angle-double-left',
+                    'nextYear' => 'fa-angle-double-right'
+                ],
+                'buttonText' => [
+                    'listDay' => 'list day',
+                    'listWeek' =>  'list week',
+                    'listMonth' => 'list month',
+                    'listYear' => 'list year'
+                ],
+                'displayEventEnd' => ['month' => true],
+                'buttonIcons' => true,
+                'listDay' => ['text' => 'xd'],
+                'footer' => [
+                    'left' => 'listDay, listWeek, listMonth, listYear',
+                ]
+            ]
+        )
         ->setCallbacks([
             'eventRender' => 'function(event, element, view) {var duration = moment.duration(event.end - event.start).hours() + moment.duration(event.end - event.start).days()*24; element.find(".fc-title").append(" "+duration+"h");}'
         ]);
