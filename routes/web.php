@@ -19,8 +19,6 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/stats', 'StatsController@index');
-
 Route::resource('events', 'EventController');
 
 Route::resource('categories', 'CategoriesController');

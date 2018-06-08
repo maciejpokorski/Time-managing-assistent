@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Input;
 
 class EventController extends Controller
 {
-
     public function __construct(){
         $this->middleware('auth');
     }
@@ -31,7 +30,7 @@ class EventController extends Controller
                         $event->title,
                         false,
                         new \DateTime($event->start_date),
-                        new \DateTime($event->end_date.'+ 1 day'),
+                        new \DateTime($event->end_date),
                         null,
                         // Add color and link on event
                         [
@@ -44,9 +43,14 @@ class EventController extends Controller
             }
         }
 
-        $calendar = Calendar::addEvents($events);
+        $calendar = Calendar::addEvents($events)
+        ->setOptions(['displayEventEnd' => ['month' => true]])
+        ->setCallbacks([
+            'eventRender' => 'function(event, element, view) {var duration = moment.duration(event.end - event.start).hours() + moment.duration(event.end - event.start).days()*24; element.find(".fc-title").append(" "+duration+"h");}'
+        ]);
         return view('fullcalender', compact(['calendar', 'categoriesArray']));
     }
+
 
     public function store(Request $request)
     {
@@ -55,6 +59,7 @@ class EventController extends Controller
 
         $validator = Validator::make($request->all(), [
             'event_name' => 'required|max:255',
+            'category_id' => 'required|exists:categories,id',
             'start_date' => 'required|date|before:end_date',
             'end_date' => 'required|date|after:start_date'
         ]);
@@ -103,6 +108,7 @@ class EventController extends Controller
 
         $validator = Validator::make($request->all(), [
             'event_name' => 'required|max:255',
+            'category_id' => 'required|exists:categories,id',
             'start_date' => 'required|date|before:end_date',
             'end_date' => 'required|date|after:start_date'
         ]);
@@ -116,6 +122,7 @@ class EventController extends Controller
         $event->title = $request['event_name'];
         $event->start_date = $request['start_date'];
         $event->end_date = $request['end_date'];
+        $event->category_id = $request['category_id'];
         $event->save();
 
         \Session::flash('success','Event updated successfully.');

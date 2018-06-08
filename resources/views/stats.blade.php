@@ -5,8 +5,9 @@
       <div class="card">
         <div class="card-header">Statistics</div>
         <div class="card-body">
+          <h2>{{ $title }}</h2>
           <div id="chart-div"></div>
-          @piechart('IMDB', 'chart-div')
+          @piechart('chart', 'chart-div')
         </div>
       </div>
     </div>
