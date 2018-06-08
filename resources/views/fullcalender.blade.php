@@ -2,8 +2,26 @@
 <link href="{{ asset('css/fullcalendar.css') }}" rel="stylesheet"> @endsection @section('scripts')
 <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script> @endsection @section('content')
 <div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
+  <div class="row align-items-start justify-content-center">
+    <div class="col-md-3 col-sm-8 col-xs-12">
+      <div class="card">
+        <div class="card-header">Stats</div>
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            @foreach($categoriesArray as $key => $category)
+            <button type="button" onclick='if(hoursTotal.filter) {hoursTotal.filter=null}  else {hoursTotal.filter="{{  str_replace(" ", "_", $category["title"]) }}";} $("#calendar-{{ $calendar->getId() }}").fullCalendar("rerenderEvents"); '
+              id="{{ str_replace(' ', '_', $category['title']) }}" class="category-stats d-flex align-items-start justify-content-between"
+              style="background: {{ $category['color'] }}" value="{{ $key }}">
+              {{ $category['title'] }}
+              <span class="badge badge-secondary">0h</span>
+            </button>
+            @endforeach
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8 col-xs-12">
       <div class="card">
         <div class="card-header">Events</div>
         <div class="card-body">
@@ -100,5 +118,9 @@
       </div>
     </div>
   </div>
+  <br>
+
+
+
 </div>
 {!! $calendar->script() !!} @endsection

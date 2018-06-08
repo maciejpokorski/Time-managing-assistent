@@ -39,7 +39,8 @@ class EventController extends Controller
                         // Add color and link on event
                         [
                             'color' => $category->color,
-                            'url' => 'events/'.$event->id
+                            'url' => 'events/'.$event->id,
+                            'className' => [str_replace(' ', '_', $category->title)]
                         ]
                     );
                 }
@@ -58,6 +59,8 @@ class EventController extends Controller
                     'prevYear' => 'fa-angle-double-left',
                     'nextYear' => 'fa-angle-double-right'
                 ],
+                'showNonCurrentDates' => false,
+                'fixedWeekCount' => false,
                 'buttonText' => [
                     'listDay' => 'list day',
                     'listWeek' =>  'list week',
@@ -75,7 +78,48 @@ class EventController extends Controller
             ]
         )
         ->setCallbacks([
-            'eventRender' => 'function(event, element, view) {var duration = moment.duration(event.end - event.start).hours() + moment.duration(event.end - event.start).days()*24; element.find(".fc-title").append(" "+duration+"h");}',
+            'eventAfterAllRender' => 'function(view) {   
+
+               Object.keys(hoursTotal).forEach(function (key) {
+                    $("#"+key).height(hoursTotal[key])
+                    $("#"+key).find(".badge").html(hoursTotal[key]+" h");
+                });
+
+            }',
+
+            'eventRender' => 'function(event, element, view) {
+                if(!hoursTotal.view || hoursTotal.view !== view.name){
+                    hoursTotal[event.className[0]] = 0;
+                }
+                
+            }',
+
+            'eventAfterRender' => 'function(event, element, view) {
+                var duration = moment.duration(event.end - event.start).hours() + moment.duration(event.end - event.start).days()*24; 
+                element.find(".fc-title").append(" "+duration+"h")
+
+                if(hoursTotal.events.indexOf(event._id) === -1){
+                     hoursTotal.events.push(event._id);
+                     hoursTotal[event.className[0]] += duration;
+                }
+
+                if(hoursTotal.filter){
+                    if(event.className[0] !== hoursTotal.filter){
+                        element.remove();
+                    }
+                }
+
+                hoursTotal.view = view.name;
+               
+            }',
+            'viewRender' => 'function(view, element) {
+                hoursTotal.events = [];    
+                Object.keys(hoursTotal).forEach(function (key) {
+                     if(key !== "events"){
+                        hoursTotal[key] = 0;
+                     }
+                });
+            }'
         ]);
         return view('fullcalender', compact(['calendar', 'categoriesArray']));
     }

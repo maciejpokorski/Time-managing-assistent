@@ -23698,6 +23698,9 @@ __webpack_require__(218);
 //     el: '#app'
 // });
 
+window.hoursTotal = {};
+window.hoursTotal.events = [];
+
 /***/ }),
 /* 218 */
 /***/ (function(module, exports, __webpack_require__) {

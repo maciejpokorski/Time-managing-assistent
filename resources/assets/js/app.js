@@ -20,3 +20,6 @@ require('./bootstrap');
 // const app = new Vue({
 //     el: '#app'
 // });
+
+window.hoursTotal = {};
+window.hoursTotal.events = [];

@@ -13453,3 +13453,8 @@ a.text-dark:focus {
   line-height: 92px;
 }
 
+.category-stats {
+  max-height: 80vh;
+  min-height: 30px;
+}
+
