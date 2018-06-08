@@ -24,7 +24,11 @@ class EventController extends Controller
         $categoriesArray = [];
         if($categories->count()) {
             foreach ($categories as $category) {
-                $categoriesArray[$category->id] = $category->title;
+                $categoriesArray[$category->id] = 
+                [
+                    'title' => $category->title,
+                    'color' => $category->color
+                ];
                 foreach ($category->events as $event){
                     $events[] = Calendar::event(
                         $event->title,
@@ -60,6 +64,8 @@ class EventController extends Controller
                     'listMonth' => 'list month',
                     'listYear' => 'list year'
                 ],
+                'selectable' => false,
+                'selectHelper' => false,
                 'displayEventEnd' => ['month' => true],
                 'buttonIcons' => true,
                 'listDay' => ['text' => 'xd'],
@@ -69,7 +75,7 @@ class EventController extends Controller
             ]
         )
         ->setCallbacks([
-            'eventRender' => 'function(event, element, view) {var duration = moment.duration(event.end - event.start).hours() + moment.duration(event.end - event.start).days()*24; element.find(".fc-title").append(" "+duration+"h");}'
+            'eventRender' => 'function(event, element, view) {var duration = moment.duration(event.end - event.start).hours() + moment.duration(event.end - event.start).days()*24; element.find(".fc-title").append(" "+duration+"h");}',
         ]);
         return view('fullcalender', compact(['calendar', 'categoriesArray']));
     }
@@ -106,8 +112,11 @@ class EventController extends Controller
     public function show($id){
         $event = Event::findOrFail($id);
         $categoriesArray =  Auth::user()->categories()->get()->mapWithKeys(function ($item) {
-            return [$item['id'] => $item['title']];
-        });
+            return [$item['id'] => [
+                'title' => $item->title,
+                'color' => $item->color
+            ]];
+        })->toArray();
         $start_date = Carbon::parse($event->start_date);
         $end_date = Carbon::parse($event->end_date);
         $event->start_time = $start_date->format('H:i');

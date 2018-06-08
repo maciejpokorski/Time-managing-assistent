@@ -55,9 +55,16 @@
 
         <div class="col-xs-2 col-sm-2 col-md-2">
           <div class="form-group">
-            {!! Form::label('categor_id','Category:') !!}
+            {!! Form::label('category_id','Category:') !!}
             <div>
-              {!! Form::select('category_id', $categoriesArray, $event->category_id) !!}
+              <select style="background: {{ reset($categoriesArray)['color'] }}" onload="alert('xd')" onchange="this.style.background = this.options[this.selectedIndex].style.background"
+                class="form-control selectpicker" name="category_id">
+                @foreach($categoriesArray as $key => $category)
+                <option class="with-color" style="background: {{ $category['color'] }}" value="{{ $key }}">
+                  {{ $category['title'] }}
+                </option>
+                @endforeach
+              </select>
             </div>
           </div>
         </div>

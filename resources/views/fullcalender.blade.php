@@ -72,14 +72,24 @@
               <div class="form-group">
                 {!! Form::label('category_id','Category:') !!}
                 <div>
-                  {!! Form::select('category_id', $categoriesArray, ['class' => 'selectpicker']) !!}
+                  <select style="background: {{ reset($categoriesArray)['color'] }}" onload="alert('xd')" onchange="this.style.background = this.options[this.selectedIndex].style.background"
+                    class="form-control selectpicker" name="category_id">
+                    @foreach($categoriesArray as $key => $category)
+                    <option class="with-color" style="background: {{ $category['color'] }}" value="{{ $key }}">
+                      {{ $category['title'] }}
+                    </option>
+                    @endforeach
+                  </select>
                 </div>
               </div>
             </div>
 
-            <div class="col-xs-2 col-sm-2 col-md-2 offset-md-1 text-center add-event-submit-wrapper">
-              {!! Form::submit('Add Event',['class'=>'btn btn-primary']) !!}
+            <div class="col-xs-3 col-sm-3 col-md-2 offset-md-1 text-center add-event-submit-wrapper">
+              <div class="form-group">
+                {!! Form::submit('Add Event',['class'=>'btn btn-primary']) !!}
+              </div>
             </div>
+
           </div>
           {!! Form::close() !!}
 
