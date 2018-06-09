@@ -58,6 +58,15 @@ class CategoriesController extends Controller
         
         $requestData = $request->all();
         $requestData['user_id'] = Auth::id();
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|max:255|unique:categories',
+            'color' => 'required|unique:categories|size:6'
+        ]);
+
+        if ($validator->fails()) {
+        	\Session::flash('warnning','Please enter the valid details');
+            return Redirect::to('/categories')->withInput()->withErrors($validator);
+        }
         Category::create($requestData);
 
         return redirect('categories')->with('flash_message', 'Category added!');
@@ -105,6 +114,17 @@ class CategoriesController extends Controller
         $requestData = $request->all();
         
         $category = Category::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|max:255|unique:categories',
+            'color' => 'required|unique:categories|size:6',
+        ]);
+
+        if ($validator->fails()) {
+        	\Session::flash('warnning','Please enter the valid details');
+            return Redirect::to('/categories')->withInput()->withErrors($validator);
+        }
+
         $category->update($requestData);
 
         return redirect('categories')->with('flash_message', 'Category updated!');
