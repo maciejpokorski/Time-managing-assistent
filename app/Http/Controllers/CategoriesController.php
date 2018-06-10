@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use Illuminate\Support\Facades\Redirect;
 use App\Category;
+use Validator;
 use Illuminate\Http\Request;
 use Auth;
-
+use Illuminate\Validation\Rule;
 class CategoriesController extends Controller
 {
     public function __construct(){
@@ -56,18 +57,20 @@ class CategoriesController extends Controller
     public function store(Request $request)
     {
         
-        $requestData = $request->all();
-        $requestData['user_id'] = Auth::id();
         $validator = Validator::make($request->all(), [
-            'title' => 'required|max:255|unique:categories',
-            'color' => 'required|unique:categories|size:6'
+            'title' => 'required|max:255|unique:categories,title',
+            'color' => 'required|size:7|unique:categories,color'
         ]);
 
         if ($validator->fails()) {
         	\Session::flash('warnning','Please enter the valid details');
             return Redirect::to('/categories')->withInput()->withErrors($validator);
         }
-        Category::create($requestData);
+        $category = new Category;
+        $category->user_id = Auth::id();
+        $category->title = $request('title');
+        $category->color = $request('color');
+        $category->save();
 
         return redirect('categories')->with('flash_message', 'Category added!');
     }
@@ -116,18 +119,26 @@ class CategoriesController extends Controller
         $category = Category::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
-            'title' => 'required|max:255|unique:categories',
-            'color' => 'required|unique:categories|size:6',
+            'title' => [
+                'required',
+                'max:255',
+                Rule::unique('categories')->ignore($category->title, 'title')
+            ],
+            'color' => [
+                'required',
+                'max:7',
+                Rule::unique('categories')->ignore($category->color, 'color')
+            ],
         ]);
 
         if ($validator->fails()) {
         	\Session::flash('warnning','Please enter the valid details');
-            return Redirect::to('/categories')->withInput()->withErrors($validator);
+            return Redirect::to('/categories/'.$id.'/edit')->withInput()->withErrors($validator);
         }
 
         $category->update($requestData);
 
-        return redirect('categories')->with('flash_message', 'Category updated!');
+        return redirect('categories')->with('success', 'Category updated!');
     }
 
     /**
@@ -141,6 +152,6 @@ class CategoriesController extends Controller
     {
         Category::destroy($id);
 
-        return redirect('categories')->with('flash_message', 'Category deleted!');
+        return redirect('categories')->with('success', 'Category deleted!');
     }
 }
