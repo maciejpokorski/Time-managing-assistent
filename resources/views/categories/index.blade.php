@@ -5,6 +5,11 @@
             <div class="card">
                 <div class="card-header">Categories</div>
                 <div class="card-body">
+                    @if (Session::has('success'))
+                    <div class="alert alert-success">{{ Session::get('success') }}</div>
+                    @elseif (Session::has('warnning'))
+                    <div class="alert alert-danger">{{ Session::get('warnning') }}</div>
+                    @endif
                     <a href="{{ url('/categories/create') }}" class="btn btn-success btn-sm" title="Add New Category">
                         <i class="fa fa-plus" aria-hidden="true"></i> Add New
                     </a>
