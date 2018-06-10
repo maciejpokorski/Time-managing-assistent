@@ -69,8 +69,8 @@ class CategoriesController extends Controller
         }
         $category = new Category;
         $category->user_id = Auth::id();
-        $category->title = $request('title');
-        $category->color = $request('color');
+        $category->title = $request->title;
+        $category->color = $request->color;
         $category->save();
 
         return redirect('categories')->with('flash_message', 'Category added!');
