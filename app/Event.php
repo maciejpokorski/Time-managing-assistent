@@ -13,8 +13,8 @@ class Event extends Model
         return $this->belongsTo('App\Category');
     }
 
-    public function user()
+    public function userId()
     {
-        return $this->category()->with('user');
+        return $this->category()->get()->first()->user_id;
     }
 }

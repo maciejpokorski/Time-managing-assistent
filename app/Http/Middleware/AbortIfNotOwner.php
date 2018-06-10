@@ -21,8 +21,9 @@ class AbortIfNotOwner
         $id = $request->route()->parameters[$resourceName];
         $object = new $objectName;
         $object = $object->findOrFail($id);
-        $owner = $object->user()->get()->first()->id;
-        
+        //geting user id here
+        $owner = $object->userId();
+
         if ($request->user()->id != $owner) {
             abort(403, 'Unauthorized action.');
         }
