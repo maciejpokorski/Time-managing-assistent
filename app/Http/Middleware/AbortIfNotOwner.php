@@ -18,7 +18,7 @@ class AbortIfNotOwner
     public function handle($request, Closure $next, $resourceName)
     {
 
-        $objectName = ucfirst('App\\'.$resourceName);
+        $objectName = 'App\\'.ucfirst($resourceName);
         $id = $request->route()->parameters[$resourceName];
         $object = new $objectName();
         $object = $object->findOrFail($id);
