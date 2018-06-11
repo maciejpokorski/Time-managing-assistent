@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\Category;
+use App\Event
 
 class AbortIfNotOwner
 {
