@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\Category;
-use App\Event
+use App\Event;
 
 class AbortIfNotOwner
 {
@@ -20,7 +20,7 @@ class AbortIfNotOwner
 
         $objectName = ucfirst('App\\'.$resourceName);
         $id = $request->route()->parameters[$resourceName];
-        $object = new $objectName;
+        $object = new $objectName();
         $object = $object->findOrFail($id);
         //geting user id here
         $owner = $object->userId();

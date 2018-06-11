@@ -14,7 +14,7 @@ class CategoriesController extends Controller
 {
     public function __construct(){
         $this->middleware('auth');
-        $this->middleware('owner:Category', ['only' => ['update']]);
+        $this->middleware('owner:category', ['only' => ['update']]);
     }
 
     /**
