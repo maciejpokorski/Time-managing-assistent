@@ -14,7 +14,7 @@ class CategoriesController extends Controller
 {
     public function __construct(){
         $this->middleware('auth');
-        $this->middleware('owner:category', ['only' => ['update']]);
+        $this->middleware('owner:category', ['only' => ['update', 'show', 'destroy', 'edit']]);
     }
 
     /**
@@ -28,11 +28,11 @@ class CategoriesController extends Controller
         $perPage = 25;
 
         if (!empty($keyword)) {
-            $categories = Category::where('title', 'LIKE', "%$keyword%")
+            $categories = Auth::user()->categories()->where('title', 'LIKE', "%$keyword%")
                 ->orWhere('color', 'LIKE', "%$keyword%")
                 ->latest()->paginate($perPage);
         } else {
-            $categories = Category::latest()->paginate($perPage);
+            $categories = Auth::user()->categories()->paginate($perPage);
         }
 
         return view('categories.index', compact('categories'));
@@ -85,7 +85,7 @@ class CategoriesController extends Controller
      */
     public function show($id)
     {
-        $category = Category::findOrFail($id);
+        $category = Auth::user()->categories()->findOrFail($id);
 
         return view('categories.show', compact('category'));
     }
@@ -99,7 +99,7 @@ class CategoriesController extends Controller
      */
     public function edit($id)
     {
-        $category = Category::findOrFail($id);
+        $category = Auth::user()->categories()->findOrFail($id);
 
         return view('categories.edit', compact('category'));
     }
